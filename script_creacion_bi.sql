@@ -208,9 +208,44 @@ CREATE SCHEMA BI_PEDIDOS_APP
 GO
 
 -- Traer Pedido, Envio Mensajeria y Reclamo completo.
--- Traer Cupón y cupón por pedido.
+-- Traer Cupï¿½n y cupï¿½n por pedido.
 -- Traer envio
--- Traer Paquete
+
+
+
+--------------------------- TRAER PAQUETE 
+
+-- DROP Tabla
+
+IF OBJECT_ID('BI_PEDIDOS_APP.BI_HECHO_PAQUETE', 'U') IS NOT NULL
+	DROP TABLE BI_PEDIDOS_APP.BI_HECHO_PAQUETE
+GO
+
+
+CREATE TABLE BI_PEDIDOS_APP.BI_HECHO_PAQUETE(
+	ID_HECHO_PAQUETE decimal(18,0) PRIMARY KEY,
+	HECHO_PAQUETE_TIPO nvarchar(50),
+	HECHO_PAQUETE_TIPO_PRECIO nvarchar(50),
+)
+
+-- Migracion 
+
+CREATE PROCEDURE BI_PEDIDOS_APP.MIGRAR_BI_HECHO_PAQUETE
+AS
+BEGIN
+	INSERT INTO BI_PEDIDOS_APP.BI_HECHO_PAQUETE(HECHO_PAQUETE_TIPO,HECHO_PAQUETE_TIPO_PRECIO)
+	SELECT DISTINCT l.PAQUETE_TIPO, l.PAQUETE_TIPO_PRECIO
+	FROM PEDIDOS_APP.PAQUETE l
+END
+GO
+
+-------------------------------------------------
+
+
+
+
+
+
 -- Traer Cupones reclamo
 -- Traer Repartidor
 
