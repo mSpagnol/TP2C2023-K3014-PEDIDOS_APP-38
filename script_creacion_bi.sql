@@ -834,18 +834,20 @@ select * from BI_PEDIDOS_APP.BI_HECHO_PEDIDO
  SELECT
     Año,
     Mes,
-    MAX(TotalPedidos) AS MaxPedidos
+    MaxPedidos,
+	ID_DIA AS Dia_Mayor_Pedidos,
+	ID_RANGO_HORARIO AS Franja_Horario_Mayor_Pedidos
 FROM (-- el subselect esta hecho porque no puedo hacer el temas de las fk
     SELECT
         DATEPART(YEAR, PEDIDO_FECHA) AS Año, -- esto puede ser directo el año de la tabla tiempo
         DATEPART(MONTH, PEDIDO_FECHA) AS Mes, -- esto puede ser directo el mes de la tabla tiempo no lo hice asi por tema fk
-        ID_DIA,
-        ID_RANGO_HORARIO,
-        COUNT(*) AS TotalPedidos
+        COUNT(*) AS TotalPedidos,
+		MAX(COUNT(*)) OVER (PARTITION BY DATEPART(YEAR, PEDIDO_FECHA), DATEPART(MONTH, PEDIDO_FECHA)) AS MaxPedidos,
+		ID_DIA,-- esto si arreglamos el tema de fk es un join para que salga el nombre directo
+        ID_RANGO_HORARIO --
     FROM BI_PEDIDOS_APP.BI_HECHO_PEDIDO hp
     GROUP BY DATEPART(YEAR, PEDIDO_FECHA), DATEPART(MONTH, PEDIDO_FECHA), ID_DIA, ID_RANGO_HORARIO
 ) AS Subquery
-GROUP BY Año, Mes 
-ORDER BY año, Mes DESC
+WHERE TotalPedidos=MaxPedidos
+ORDER BY Año , Mes DESC
 --GO
-
