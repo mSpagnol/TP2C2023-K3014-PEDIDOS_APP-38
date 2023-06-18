@@ -829,26 +829,23 @@ select * from BI_PEDIDOS_APP.BI_HECHO_PEDIDO
 *********************/
 
 
-/*
-SELECT * FROM BI_PEDIDOS_APP.BI_HECHO_PEDIDO
-
-CREATE VIEW BI_PEDIDOS_APP.VISTA_CANTIDAD_PEDIDOS_MES_ANIO 
-AS
+--CREATE VIEW BI_PEDIDOS_APP.VISTA_CANTIDAD_PEDIDOS_MES_ANIO 
+--AS
  SELECT
     Año,
     Mes,
     MAX(TotalPedidos) AS MaxPedidos
-FROM (
+FROM (-- el subselect esta hecho porque no puedo hacer el temas de las fk
     SELECT
-        DATEPART(YEAR, PEDIDO_FECHA) AS Año,
-        DATEPART(MONTH, PEDIDO_FECHA) AS Mes,
+        DATEPART(YEAR, PEDIDO_FECHA) AS Año, -- esto puede ser directo el año de la tabla tiempo
+        DATEPART(MONTH, PEDIDO_FECHA) AS Mes, -- esto puede ser directo el mes de la tabla tiempo no lo hice asi por tema fk
         ID_DIA,
         ID_RANGO_HORARIO,
         COUNT(*) AS TotalPedidos
     FROM BI_PEDIDOS_APP.BI_HECHO_PEDIDO hp
     GROUP BY DATEPART(YEAR, PEDIDO_FECHA), DATEPART(MONTH, PEDIDO_FECHA), ID_DIA, ID_RANGO_HORARIO
 ) AS Subquery
-GROUP BY Año, Mes
-GO
-//LO hice con la forma de datePART, pero puede ser con la tabla de tiempo con las fk
-*/
+GROUP BY Año, Mes 
+ORDER BY año, Mes DESC
+--GO
+
